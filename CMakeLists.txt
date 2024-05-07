@@ -21,11 +21,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
-# Including target-syslibs only for standalone build of target-utils
-if (STANDALONE)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/target-syslibs/include)
-endif()
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/bigcode/include/target_utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/cJSON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/klish/target_utils)

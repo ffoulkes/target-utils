@@ -7,11 +7,6 @@ if (FORCE32)
   set(C_FLAGS "${C_FLAGS} -m32")
 endif()
 
-# Including target-syslibs only for standalone build of target-utils
-if (STANDALONE)
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/target-syslibs/include)
-endif()
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bigcode/include/target_utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cJSON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/judy-1.0.5/src)
