@@ -39,6 +39,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
 add_subdirectory(src)
 add_subdirectory(third-party)
 
+################
+# target_utils #
+################
+
 add_library(target_utils SHARED
   $<TARGET_OBJECTS:target_sysutil_o>
   $<TARGET_OBJECTS:xxhash_o>
@@ -60,7 +64,27 @@ target_link_libraries(target_utils PUBLIC
   -Wl,--no-whole-archive
 )
 
-file(COPY include/target-utils DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-  PATTERN "*.doxy" EXCLUDE
-  PATTERN "*.am" EXCLUDE)
+set_target_properties(target_utils PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
 
+###########
+# install #
+###########
+
+install(
+  TARGETS target_utils
+  COMPONENT target-utils
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    DIRECTORY include/target-utils
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    FILES_MATCHING
+      PATTERN "*.h"
+)
