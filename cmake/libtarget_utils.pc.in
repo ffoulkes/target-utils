@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: target-utils
+Description: Utils library for Device drivers
+URL: https://github.com/p4lang/target-utils.git
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -ltarget_utils
+Cflags: -I${includedir}

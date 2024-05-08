@@ -88,3 +88,16 @@ install(
     FILES_MATCHING
       PATTERN "*.h"
 )
+
+###################
+# pkg-config file #
+###################
+
+set(_pkgconfig_file ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/libtarget_utils.pc)
+
+configure_file(cmake/libtarget_utils.pc.in ${_pkgconfig_file} @ONLY)
+
+install(
+  FILES ${_pkgconfig_file}
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
