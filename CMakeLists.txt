@@ -3,7 +3,11 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(target_utils VERSION 0.1 LANGUAGES C)
+project(target_utils VERSION 1.1.0 LANGUAGES C)
+
+include(CMakePackageConfigHelpers)
+include(CMakePrintHelpers)
+include(GNUInstallDirs)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 11)
@@ -14,6 +18,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 
+# Generate config.h file
 include(ConfigureChecks)
 
 find_package(targetsys)
@@ -73,8 +78,12 @@ set_target_properties(target_utils PROPERTIES
 # install #
 ###########
 
+set(EXPORTNAME targetutils)
+set(EXPORTSTEM targetutils)
+
 install(
   TARGETS target_utils
+  EXPORT ${EXPORTNAME}
   COMPONENT target-utils
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -100,4 +109,35 @@ configure_file(cmake/libtarget_utils.pc.in ${_pkgconfig_file} @ONLY)
 install(
   FILES ${_pkgconfig_file}
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+
+###############
+# config-file #
+###############
+
+install(EXPORT ${EXPORTNAME}
+  FILE ${EXPORTSTEM}-targets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${EXPORTSTEM}
+)
+
+configure_package_config_file(
+  cmake/${EXPORTSTEM}-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${EXPORTSTEM}
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config-version.cmake
+  COMPONENT
+    target-utils
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/${EXPORTSTEM}
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config-version.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
 )
