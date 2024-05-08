@@ -3,6 +3,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_CONFIG_H=1 -DHAVE_LIB_EXPAT -DCLISH_P
 add_definitions(-D_GNU_SOURCE)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-pedantic -Wno-error")
 
+###########
+# clish_o #
+###########
+
 add_library(clish_o OBJECT
   clish/plugin_builtin.c
 	clish/command/command.c
@@ -97,22 +101,36 @@ add_library(clish_o OBJECT
   #plugins/lua/lua_print_error.c
 	libc/getopt.c
 )
-add_library(clish  SHARED
+
+target_link_libraries(clish_o PUBLIC target_sys)
+
+#########
+# clish #
+#########
+
+add_library(clish SHARED
   $<TARGET_OBJECTS:clish_o>
   $<TARGET_OBJECTS:bigcode_o>
   #$<TARGET_OBJECTS:expat_o>
 )
+
 # expat is static lib
 target_compile_options(clish_o PRIVATE "-w")
 find_package(Libedit)
 find_library(EXPAT_LIB expat)
 target_link_libraries(clish PUBLIC ${LIBEDIT_LIBRARIES} ${EXPAT_LIB})
 
+###########
+# bfshell #
+###########
 
-
-project(bfshell)
 add_executable(bfshell bin/bfshell.c)
+
 install(TARGETS bfshell DESTINATION bin)
+
+##########################
+# bfshell_plugin_clish_o #
+##########################
 
 add_library(bfshell_plugin_clish_o OBJECT
 	plugins/clish/builtin_init.c
@@ -122,10 +140,29 @@ add_library(bfshell_plugin_clish_o OBJECT
 	plugins/clish/sym_misc.c
 	plugins/clish/sym_script.c
 )
+
+target_link_libraries(bfshell_plugin_clish_o PUBLIC target_sys)
+
 target_compile_options(bfshell_plugin_clish_o PRIVATE -Wno-unused-parameter)
+
+########################
+# bfshell_plugin_clish #
+########################
+
 if (NOT STATIC-LINK-LIB)
   add_library(bfshell_plugin_clish SHARED $<TARGET_OBJECTS:bfshell_plugin_clish_o>)
   target_link_libraries(bfshell_plugin_clish clish)
   SET_TARGET_PROPERTIES(bfshell_plugin_clish PROPERTIES PREFIX "")
 endif()
-install(FILES target-utils/xml/startup.xml target-utils/xml/types.xml DESTINATION share/cli/xml)
+
+#################
+# share/cli/xml #
+#################
+
+install(
+  FILES
+    target-utils/xml/startup.xml
+    target-utils/xml/types.xml
+  DESTINATION
+    share/cli/xml
+)

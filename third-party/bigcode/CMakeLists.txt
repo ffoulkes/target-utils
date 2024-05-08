@@ -178,3 +178,5 @@ include/target-utils/uCli/ucli_common.h
 include/target-utils/uCli/ucli_handler_macros.h
 include/target-utils/uCli/ucli_porting.h
 )
+
+target_link_libraries(bigcode_o PUBLIC target_sys)

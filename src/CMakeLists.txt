@@ -1,4 +1,3 @@
-project(libtarget_utils VERSION 0.1 LANGUAGES C)
 
 add_library(target_sysutil_o OBJECT
   target_utils.c
@@ -10,3 +9,5 @@ add_library(target_sysutil_o OBJECT
   rbt/rbt.c
   power2_allocator/power2_allocator.c
 )
+
+target_link_libraries(target_sysutil_o PUBLIC target_sys)
