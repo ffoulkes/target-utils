@@ -24,3 +24,5 @@ ltmain.sh
 missing
 test-driver
 expat_config.h.in
+.vscode/
+.vslick/
