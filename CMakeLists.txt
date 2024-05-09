@@ -5,27 +5,38 @@ cmake_minimum_required(VERSION 3.15)
 
 project(target_utils VERSION 1.1.0 LANGUAGES C)
 
+#-----------------------------------------------------------------------
+# Modules
+#-----------------------------------------------------------------------
 include(CMakePackageConfigHelpers)
 include(CMakePrintHelpers)
 include(GNUInstallDirs)
 
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-
-# Generate config.h file
-include(ConfigureChecks)
-
+#-----------------------------------------------------------------------
+# Packages
+#-----------------------------------------------------------------------
 find_package(targetsys)
 if(NOT targetsys_FOUND)
   message(FATAL_ERROR "Could not find targetsys package")
 endif()
 message(STATUS "Found target-sys ${targetsys_VERSION}")
+
+#-----------------------------------------------------------------------
+# config.h file
+#-----------------------------------------------------------------------
+include(ConfigureChecks)
+
+#-----------------------------------------------------------------------
+# Build
+#-----------------------------------------------------------------------
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=unused-parameter")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
@@ -40,23 +51,21 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/judy-1.0.5/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/tommyds/tommyds)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
 
-
 add_subdirectory(src)
 add_subdirectory(third-party)
 
-################
-# target_utils #
-################
-
+#-----------------------------------------------------------------------
+# target_utils
+#-----------------------------------------------------------------------
 add_library(target_utils SHARED
-  $<TARGET_OBJECTS:target_sysutil_o>
-  $<TARGET_OBJECTS:xxhash_o>
-  $<TARGET_OBJECTS:tommyds_o>
-  $<TARGET_OBJECTS:JudyCommon>
-  $<TARGET_OBJECTS:JudyL>
   $<TARGET_OBJECTS:Judy1>
-  $<TARGET_OBJECTS:JudySL>
+  $<TARGET_OBJECTS:JudyCommon>
   $<TARGET_OBJECTS:JudyHS>
+  $<TARGET_OBJECTS:JudyL>
+  $<TARGET_OBJECTS:JudySL>
+  $<TARGET_OBJECTS:target_sysutil_o>
+  $<TARGET_OBJECTS:tommyds_o>
+  $<TARGET_OBJECTS:xxhash_o>
 )
 
 target_include_directories(target_utils PUBLIC
@@ -81,10 +90,9 @@ set_target_properties(target_utils PROPERTIES
   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-###########
-# install #
-###########
-
+#-----------------------------------------------------------------------
+# Install
+#-----------------------------------------------------------------------
 set(EXPORTNAME targetutils)
 set(EXPORTSTEM targetutils)
 
@@ -105,10 +113,9 @@ install(
       PATTERN "*.h"
 )
 
-###################
-# pkg-config file #
-###################
-
+#-----------------------------------------------------------------------
+# pkg-config file
+#-----------------------------------------------------------------------
 set(_pkgconfig_file ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/libtarget_utils.pc)
 
 configure_file(cmake/libtarget_utils.pc.in ${_pkgconfig_file} @ONLY)
@@ -118,10 +125,9 @@ install(
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-###############
-# config-file #
-###############
-
+#-----------------------------------------------------------------------
+# CMake configuration file
+#-----------------------------------------------------------------------
 install(EXPORT ${EXPORTNAME}
   FILE ${EXPORTSTEM}-targets.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${EXPORTSTEM}
