@@ -59,6 +59,11 @@ add_library(target_utils SHARED
   $<TARGET_OBJECTS:JudyHS>
 )
 
+target_include_directories(target_utils PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
 # When linking cjson, we want to ensure that the whole archive is added
 # to the target_utils library and the symbols are forced to always be in.
 # Switching the whole-archive option after linking cjson is important so
