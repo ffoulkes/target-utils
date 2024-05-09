@@ -2,7 +2,8 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(target_sys)
+find_dependency(cJSON)
+find_dependency(targetsys)
 find_dependency(Threads)
 find_dependency(zlog)
 
