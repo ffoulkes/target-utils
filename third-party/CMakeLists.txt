@@ -14,7 +14,6 @@ if (FORCE32)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bigcode/include/target_utils)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cJSON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/judy-1.0.5/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/klish/target_utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/tommyds/tommyds)
@@ -40,14 +39,7 @@ function(buildTommyds)
   add_library(tommyds SHARED EXCLUDE_FROM_ALL $<TARGET_OBJECTS:tommyds_o>)
 endfunction()
 
-function(build_cJSON)
-  set(ENABLE_CJSON_TEST OFF CACHE BOOL "disable cjson test" FORCE)
-  set(BUILD_SHARED_LIBS OFF CACHE BOOL "build only static lib" FORCE)
-  add_subdirectory(cJSON)
-endfunction()
-
 add_subdirectory(bigcode)
-build_cJSON()
 add_subdirectory(judy-1.0.5)
 add_subdirectory(klish)
 buildTommyds()
@@ -55,9 +47,6 @@ add_library(xxhash_o OBJECT xxHash/xxhash.c)
 add_library(xxhash SHARED EXCLUDE_FROM_ALL $<TARGET_OBJECTS:xxhash_o>)
 
 # required for standalone builds for other packages
-file(COPY cJSON/cJSON.h DESTINATION
-  ${CMAKE_INSTALL_PREFIX}/include/target-utils/third-party/cJSON)
-
 file(COPY judy-1.0.5/src/Judy.h DESTINATION
   ${CMAKE_INSTALL_PREFIX}/include/target-utils/third-party/judy-1.0.5/src/)
 

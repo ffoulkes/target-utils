@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(target_utils VERSION 1.1.0 LANGUAGES C)
 
+option(WITH_CJSON "Include cJSON in target_utils" OFF)
+
 #-----------------------------------------------------------------------
 # Modules
 #-----------------------------------------------------------------------
@@ -15,6 +17,11 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 #-----------------------------------------------------------------------
+# config.h file
+#-----------------------------------------------------------------------
+include(ConfigureChecks)
+
+#-----------------------------------------------------------------------
 # Packages
 #-----------------------------------------------------------------------
 find_package(targetsys)
@@ -23,10 +30,13 @@ if(NOT targetsys_FOUND)
 endif()
 message(STATUS "Found target-sys ${targetsys_VERSION}")
 
-#-----------------------------------------------------------------------
-# config.h file
-#-----------------------------------------------------------------------
-include(ConfigureChecks)
+if(WITH_CJSON)
+  find_package(cJSON)
+  if(NOT cJSON_FOUND)
+    message(FATAL_ERROR "Could not find cJSON package")
+  endif()
+  message(STATUS "Found cJSON ${cJSON_VERSION}")
+endif()
 
 #-----------------------------------------------------------------------
 # Build
@@ -44,7 +54,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/cJSON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/judy-1.0.5/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/tommyds/tommyds)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
@@ -68,27 +77,29 @@ add_library(target_utils SHARED
 
 target_include_directories(target_utils PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_link_libraries(target_utils PUBLIC target_sys)
 
 set_target_properties(target_utils PROPERTIES INSTALL_RPATH "$ORIGIN")
 
-# When linking cjson, we want to ensure that the whole archive is added
-# to the target_utils library and the symbols are forced to always be in.
-# Switching the whole-archive option after linking cjson is important so
-# that other archives and libraries don't start using this option
-target_link_libraries(target_utils PUBLIC
-  -Wl,--whole-archive
-  cjson
-  -Wl,--no-whole-archive
-)
+if(WITH_CJSON)
+  # When linking cjson, we want to ensure that the whole archive is added
+  # to the target_utils library and the symbols are forced to always be in.
+  # Switching the whole-archive option after linking cjson is important so
+  # that other archives and libraries don't start using this option
+  target_link_libraries(target_utils PUBLIC
+    -Wl,--whole-archive
+    cjson
+    -Wl,--no-whole-archive
+  )
 
-set_target_properties(target_utils PROPERTIES
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
-)
+  set_target_properties(target_utils PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+  )
+endif()
 
 #-----------------------------------------------------------------------
 # Install
@@ -112,6 +123,9 @@ install(
     FILES_MATCHING
       PATTERN "*.h"
 )
+
+# Create a symlink to the new location of the cJSON header file.
+install(SCRIPT cmake/create-cjson-symlink.cmake)
 
 #-----------------------------------------------------------------------
 # pkg-config file
