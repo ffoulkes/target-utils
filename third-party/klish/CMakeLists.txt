@@ -110,8 +110,12 @@ target_link_libraries(clish_o PUBLIC target_sys)
 
 add_library(clish SHARED
   $<TARGET_OBJECTS:clish_o>
-  $<TARGET_OBJECTS:bigcode_o>
-  #$<TARGET_OBJECTS:expat_o>
+)
+
+target_link_libraries(clish PRIVATE
+  -Wl,--whole-archive
+  bigcode
+  -Wl,--no-whole-archive
 )
 
 # expat is static lib

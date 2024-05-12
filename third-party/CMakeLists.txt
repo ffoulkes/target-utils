@@ -1,5 +1,11 @@
+# third-party
+
+# Copyright 2021-2024 Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
 INCLUDE(ExternalProject)
 INCLUDE(ProcessorCount)
+
 ProcessorCount(N)
 
 set(C_FLAGS " -O2 -fPIC")
