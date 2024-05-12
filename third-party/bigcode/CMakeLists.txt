@@ -46,3 +46,9 @@ add_library(bigcode STATIC
 target_include_directories(bigcode PUBLIC
   $<BUILD_INTERFACE:${BIGCODE_INCLUDE_DIR}>
 )
+
+install(
+  DIRECTORY include/target-utils/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/target-utils/
+  PATTERN *.h
+)
