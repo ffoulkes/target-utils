@@ -73,6 +73,8 @@ target_include_directories(target_utils PUBLIC
 
 target_link_libraries(target_utils PUBLIC target_sys)
 
+set_target_properties(target_utils PROPERTIES INSTALL_RPATH "$ORIGIN")
+
 # When linking cjson, we want to ensure that the whole archive is added
 # to the target_utils library and the symbols are forced to always be in.
 # Switching the whole-archive option after linking cjson is important so
