@@ -10,4 +10,7 @@ add_library(target_sysutil_o OBJECT
   power2_allocator/power2_allocator.c
 )
 
-target_link_libraries(target_sysutil_o PUBLIC target_sys)
+target_link_libraries(target_sysutil_o PUBLIC
+  judy
+  target_sys
+)

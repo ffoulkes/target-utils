@@ -38,6 +38,12 @@ if(WITH_CJSON)
   message(STATUS "Found cJSON ${cJSON_VERSION}")
 endif()
 
+find_package(judy)
+if(NOT judy_FOUND)
+  message(FATAL_ERROR "Could not find judy package")
+endif()
+message(STATUS "Found judy ${judy_VERSION}")
+
 #-----------------------------------------------------------------------
 # Build
 #-----------------------------------------------------------------------
@@ -54,7 +60,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/judy-1.0.5/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/tommyds/tommyds)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
 
@@ -65,11 +70,6 @@ add_subdirectory(third-party)
 # target_utils
 #-----------------------------------------------------------------------
 add_library(target_utils SHARED
-  $<TARGET_OBJECTS:Judy1>
-  $<TARGET_OBJECTS:JudyCommon>
-  $<TARGET_OBJECTS:JudyHS>
-  $<TARGET_OBJECTS:JudyL>
-  $<TARGET_OBJECTS:JudySL>
   $<TARGET_OBJECTS:target_sysutil_o>
   $<TARGET_OBJECTS:tommyds_o>
   $<TARGET_OBJECTS:xxhash_o>
@@ -82,7 +82,11 @@ target_include_directories(target_utils PUBLIC
 
 target_link_libraries(target_utils PUBLIC target_sys)
 
-set_target_properties(target_utils PROPERTIES INSTALL_RPATH "$ORIGIN")
+set_target_properties(target_utils PROPERTIES
+  INSTALL_RPATH "$ORIGIN"
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
 
 if(WITH_CJSON)
   # When linking cjson, we want to ensure that the whole archive is added
@@ -93,11 +97,6 @@ if(WITH_CJSON)
     -Wl,--whole-archive
     cjson
     -Wl,--no-whole-archive
-  )
-
-  set_target_properties(target_utils PROPERTIES
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
   )
 endif()
 

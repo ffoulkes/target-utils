@@ -3,6 +3,7 @@
 include(CMakeFindDependencyMacro)
 
 find_dependency(cJSON)
+find_dependency(judy)
 find_dependency(targetsys)
 find_dependency(Threads)
 find_dependency(zlog)

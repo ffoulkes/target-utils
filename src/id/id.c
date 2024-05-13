@@ -28,7 +28,7 @@
 
 #include <target-sys/bf_sal/bf_sys_intf.h>
 #include <target-utils/id/id.h>
-#include <Judy.h>
+#include <target-utils/judy/Judy.h>
 
 //#define BF_ID_ALLOCATOR_TEST 1
 

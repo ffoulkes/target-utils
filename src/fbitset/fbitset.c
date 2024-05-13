@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include <target-utils/fbitset/fbitset.h>
-#include <Judy.h>
+#include <target-utils/judy/Judy.h>
 #include <assert.h>
 
 /* Initialize a bitset. */

@@ -14,14 +14,12 @@ if (FORCE32)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bigcode/include/target_utils)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/judy-1.0.5/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/klish/target_utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/tommyds/tommyds)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/xxHash/)
 
 
 function(buildTommyds)
-  include_directories(tommyds/tommyds/)
   add_library(tommyds_o OBJECT
     tommyds/tommyds/tommyalloc.c
     tommyds/tommyds/tommyarrayblk.c
@@ -34,22 +32,27 @@ function(buildTommyds)
     tommyds/tommyds/tommyhashtbl.c
     tommyds/tommyds/tommylist.c
     tommyds/tommyds/tommytrie.c
-    tommyds/tommyds/tommytrieinp.c)
-  set_target_properties(tommyds_o PROPERTIES COMPILE_FLAGS "-Wno-pointer-arith -Wno-implicit-fallthrough -Wno-free-nonheap-object")
+    tommyds/tommyds/tommytrieinp.c
+  )
+
+  target_compile_options(tommyds_o PRIVATE
+    -Wno-pointer-arith
+    -Wno-implicit-fallthrough
+    -Wno-free-nonheap-object
+  )
+
+  target_include_directories(tommyds_o PRIVATE tommyds/tommyds)
+
   add_library(tommyds SHARED EXCLUDE_FROM_ALL $<TARGET_OBJECTS:tommyds_o>)
 endfunction()
 
 add_subdirectory(bigcode)
-add_subdirectory(judy-1.0.5)
 add_subdirectory(klish)
 buildTommyds()
 add_library(xxhash_o OBJECT xxHash/xxhash.c)
 add_library(xxhash SHARED EXCLUDE_FROM_ALL $<TARGET_OBJECTS:xxhash_o>)
 
 # required for standalone builds for other packages
-file(COPY judy-1.0.5/src/Judy.h DESTINATION
-  ${CMAKE_INSTALL_PREFIX}/include/target-utils/third-party/judy-1.0.5/src/)
-
 file(COPY klish/target-utils/ DESTINATION
   ${CMAKE_INSTALL_PREFIX}/include/target-utils)
 

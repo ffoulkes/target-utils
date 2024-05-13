@@ -15,7 +15,7 @@
  */
 #include <target-utils/map/map.h>
 #include "map_log.h"
-#include <Judy.h>
+#include <target-utils/judy/Judy.h>
 #include <target-sys/bf_sal/bf_sys_intf.h>
 
 bf_map_sts_t bf_map_init(bf_map_t *map) {

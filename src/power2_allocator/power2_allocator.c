@@ -25,7 +25,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <Judy.h>
+#include <target-utils/judy/Judy.h>
 #include <target-utils/bit_utils/bit_utils.h>
 #include <target-utils/power2_allocator/power2_allocator.h>
 #include <target-sys/bf_sal/bf_sys_intf.h>
