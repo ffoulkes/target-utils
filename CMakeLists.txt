@@ -44,6 +44,12 @@ if(NOT judy_FOUND)
 endif()
 message(STATUS "Found judy ${judy_VERSION}")
 
+find_package(tommyds)
+if(NOT tommyds_FOUND)
+  message(FATAL_ERROR "Could not find tommyds package")
+endif()
+message(STATUS "Found tommyds ${tommyds_VERSION}")
+
 #-----------------------------------------------------------------------
 # Build
 #-----------------------------------------------------------------------
@@ -60,7 +66,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/tommyds/tommyds)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
 
 add_subdirectory(src)
@@ -71,7 +76,6 @@ add_subdirectory(third-party)
 #-----------------------------------------------------------------------
 add_library(target_utils SHARED
   $<TARGET_OBJECTS:target_sysutil_o>
-  $<TARGET_OBJECTS:tommyds_o>
   $<TARGET_OBJECTS:xxhash_o>
 )
 
@@ -80,7 +84,11 @@ target_include_directories(target_utils PUBLIC
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_link_libraries(target_utils PUBLIC target_sys)
+target_link_libraries(target_utils PUBLIC
+  judy
+  target_sys
+  tommyds
+)
 
 set_target_properties(target_utils PROPERTIES
   INSTALL_RPATH "$ORIGIN"
@@ -123,8 +131,10 @@ install(
       PATTERN "*.h"
 )
 
-# Create a symlink to the new location of the cJSON header file.
-install(SCRIPT cmake/create-cjson-symlink.cmake)
+#-----------------------------------------------------------------------
+# Create symbolic links
+#-----------------------------------------------------------------------
+install(SCRIPT cmake/create-symlinks.cmake)
 
 #-----------------------------------------------------------------------
 # pkg-config file
