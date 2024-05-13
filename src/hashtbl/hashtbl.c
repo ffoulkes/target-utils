@@ -16,7 +16,7 @@
 #include <target-sys/bf_sal/bf_sys_intf.h>
 #include <tommyds/tommyhashlin.h>
 #include "target-utils/hashtbl/bf_hashtbl.h"
-#include "xxhash.h"
+#include "xxhash/xxhash.h"
 
 typedef struct bf_hashtbl_node_ {
   void *data;

@@ -50,6 +50,12 @@ if(NOT tommyds_FOUND)
 endif()
 message(STATUS "Found tommyds ${tommyds_VERSION}")
 
+find_package(xxhash)
+if(NOT xxhash_FOUND)
+  message(FATAL_ERROR "Could not find xxhash package")
+endif()
+message(STATUS "Found xxHash ${xxhash_VERSION}")
+
 #-----------------------------------------------------------------------
 # Build
 #-----------------------------------------------------------------------
@@ -66,8 +72,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/third-party/xxHash)
-
 add_subdirectory(src)
 add_subdirectory(third-party)
 
@@ -76,7 +80,6 @@ add_subdirectory(third-party)
 #-----------------------------------------------------------------------
 add_library(target_utils SHARED
   $<TARGET_OBJECTS:target_sysutil_o>
-  $<TARGET_OBJECTS:xxhash_o>
 )
 
 target_include_directories(target_utils PUBLIC

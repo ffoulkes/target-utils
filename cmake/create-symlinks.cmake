@@ -47,7 +47,7 @@ file(CREATE_LINK ${NEW_FOLDER}/Judy.h ${OLD_FOLDER}/Judy.h SYMBOLIC)
 set(OLD_FOLDER ${TARGET_UTILS_PREFIX}/third-party/tommyds)
 
 if(RELATIVE_PATH)
-  set(NEW_FOLDER ../..)
+  set(NEW_FOLDER ../../..)
 else()
   set(NEW_FOLDER ${INCLUDE_PREFIX})
 endif()
@@ -55,3 +55,18 @@ endif()
 file(MAKE_DIRECTORY ${OLD_FOLDER})
 
 file(CREATE_LINK ${NEW_FOLDER}/tommyds ${OLD_FOLDER}/tommyds SYMBOLIC)
+
+#-----------------------------------------------------------------------
+# target-utils/third-party/xxHash/xxHash -> xxhash
+#-----------------------------------------------------------------------
+set(OLD_FOLDER ${TARGET_UTILS_PREFIX}/third-party/xxHash)
+
+if(RELATIVE_PATH)
+  set(NEW_FOLDER ../../..)
+else()
+  set(NEW_FOLDER ${INCLUDE_PREFIX})
+endif()
+
+file(MAKE_DIRECTORY ${OLD_FOLDER})
+
+file(CREATE_LINK ${NEW_FOLDER}/xxhash ${OLD_FOLDER}/xxHash SYMBOLIC)

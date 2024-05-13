@@ -13,4 +13,5 @@ add_library(target_sysutil_o OBJECT
 target_link_libraries(target_sysutil_o PUBLIC
   judy
   target_sys
+  xxhash
 )
