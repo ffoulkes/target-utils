@@ -14,17 +14,17 @@ set(TARGET_UTILS_PREFIX ${INCLUDE_PREFIX}/target-utils)
 #-----------------------------------------------------------------------
 # target-utils/third-party/cJSON -> cjson
 #-----------------------------------------------------------------------
-set(OLD_FOLDER ${TARGET_UTILS_PREFIX}/third-party)
+set(OLD_FOLDER ${TARGET_UTILS_PREFIX}/third-party/cJSON)
 
 if(RELATIVE_PATH)
-  set(NEW_FOLDER ../..)
+  set(NEW_FOLDER ../../../cjson)
 else()
-  set(NEW_FOLDER ${INCLUDE_PREFIX})
+  set(NEW_FOLDER ${INCLUDE_PREFIX}/cjson)
 endif()
 
 file(MAKE_DIRECTORY ${OLD_FOLDER})
 
-file(CREATE_LINK ${NEW_FOLDER}/cjson ${OLD_FOLDER}/cJSON SYMBOLIC)
+file(CREATE_LINK ${NEW_FOLDER}/cJSON.h ${OLD_FOLDER}/cJSON.h SYMBOLIC)
 
 #-----------------------------------------------------------------------
 # target-utils/third-party/judy-1.0.5/src/Judy.h -> target-utils/judy/Judy.h

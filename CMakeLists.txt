@@ -3,9 +3,9 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(target_utils VERSION 1.1.0 LANGUAGES C)
+project(targetutils VERSION 1.1.0 LANGUAGES C)
 
-option(WITH_CJSON "Include cJSON in target_utils" OFF)
+option(WITH_CJSON "Include cJSON in targetutils" OFF)
 
 #-----------------------------------------------------------------------
 # Modules
@@ -76,7 +76,7 @@ add_subdirectory(src)
 add_subdirectory(third-party)
 
 #-----------------------------------------------------------------------
-# target_utils
+# libtarget_utils
 #-----------------------------------------------------------------------
 add_library(target_utils SHARED
   $<TARGET_OBJECTS:target_sysutil_o>
@@ -114,13 +114,12 @@ endif()
 #-----------------------------------------------------------------------
 # Install
 #-----------------------------------------------------------------------
-set(EXPORTNAME targetutils)
+set(EXPORTNAME TargetUtils)
 set(EXPORTSTEM targetutils)
 
 install(
   TARGETS target_utils
   EXPORT ${EXPORTNAME}
-  COMPONENT target-utils
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -169,8 +168,6 @@ install(
   FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${EXPORTSTEM}-config-version.cmake
-  COMPONENT
-    target-utils
   DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/${EXPORTSTEM}
 )
