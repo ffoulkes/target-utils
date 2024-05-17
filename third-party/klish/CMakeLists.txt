@@ -124,13 +124,29 @@ find_package(Libedit)
 find_library(EXPAT_LIB expat)
 target_link_libraries(clish PUBLIC ${LIBEDIT_LIBRARIES} ${EXPAT_LIB})
 
+set_target_properties(clish PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  SOVERSION ${PROJECT_VERSION_MAJOR}
+)
+
+install(
+  TARGETS clish
+  EXPORT ${EXPORTNAME}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
 ###########
 # bfshell #
 ###########
 
 add_executable(bfshell bin/bfshell.c)
 
-install(TARGETS bfshell DESTINATION bin)
+install(
+  TARGETS bfshell
+  EXPORT ${EXPORTNAME}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
 
 ##########################
 # bfshell_plugin_clish_o #
@@ -154,9 +170,23 @@ target_compile_options(bfshell_plugin_clish_o PRIVATE -Wno-unused-parameter)
 ########################
 
 if (NOT STATIC-LINK-LIB)
-  add_library(bfshell_plugin_clish SHARED $<TARGET_OBJECTS:bfshell_plugin_clish_o>)
+  add_library(bfshell_plugin_clish SHARED
+    $<TARGET_OBJECTS:bfshell_plugin_clish_o>
+  )
   target_link_libraries(bfshell_plugin_clish clish)
-  SET_TARGET_PROPERTIES(bfshell_plugin_clish PROPERTIES PREFIX "")
+  set_target_properties(bfshell_plugin_clish PROPERTIES PREFIX "")
+
+  set_target_properties(bfshell_plugin_clish PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+  )
+
+  install(
+    TARGETS bfshell_plugin_clish
+    EXPORT ${EXPORTNAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
 endif()
 
 #################

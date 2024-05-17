@@ -72,6 +72,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=unused-parameter")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+set(EXPORTNAME TargetUtils)
+set(EXPORTSTEM targetutils)
+
 add_subdirectory(src)
 add_subdirectory(third-party)
 
@@ -114,9 +117,6 @@ endif()
 #-----------------------------------------------------------------------
 # Install
 #-----------------------------------------------------------------------
-set(EXPORTNAME TargetUtils)
-set(EXPORTSTEM targetutils)
-
 install(
   TARGETS target_utils
   EXPORT ${EXPORTNAME}
