@@ -24,36 +24,21 @@ include(ConfigureChecks)
 #-----------------------------------------------------------------------
 # Packages
 #-----------------------------------------------------------------------
-find_package(targetsys)
-if(NOT targetsys_FOUND)
-  message(FATAL_ERROR "Could not find targetsys package")
-endif()
+find_package(targetsys REQUIRED)
 message(STATUS "Found target-sys ${targetsys_VERSION}")
 
 if(WITH_CJSON)
-  find_package(cJSON)
-  if(NOT cJSON_FOUND)
-    message(FATAL_ERROR "Could not find cJSON package")
-  endif()
+  find_package(cJSON REQUIRED)
   message(STATUS "Found cJSON ${cJSON_VERSION}")
 endif()
 
-find_package(judy)
-if(NOT judy_FOUND)
-  message(FATAL_ERROR "Could not find judy package")
-endif()
+find_package(judy REQUIRED)
 message(STATUS "Found judy ${judy_VERSION}")
 
-find_package(tommyds)
-if(NOT tommyds_FOUND)
-  message(FATAL_ERROR "Could not find tommyds package")
-endif()
+find_package(tommyds REQUIRED)
 message(STATUS "Found tommyds ${tommyds_VERSION}")
 
-find_package(xxhash)
-if(NOT xxhash_FOUND)
-  message(FATAL_ERROR "Could not find xxhash package")
-endif()
+find_package(xxhash REQUIRED)
 message(STATUS "Found xxHash ${xxhash_VERSION}")
 
 #-----------------------------------------------------------------------
