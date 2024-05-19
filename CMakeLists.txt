@@ -24,21 +24,21 @@ include(ConfigureChecks)
 #-----------------------------------------------------------------------
 # Packages
 #-----------------------------------------------------------------------
-find_package(targetsys REQUIRED)
+find_package(targetsys REQUIRED CONFIG)
 message(STATUS "Found target-sys ${targetsys_VERSION}")
 
 if(WITH_CJSON)
-  find_package(cJSON REQUIRED)
+  find_package(cJSON REQUIRED CONFIG)
   message(STATUS "Found cJSON ${cJSON_VERSION}")
 endif()
 
-find_package(judy REQUIRED)
+find_package(judy REQUIRED CONFIG)
 message(STATUS "Found judy ${judy_VERSION}")
 
-find_package(tommyds REQUIRED)
+find_package(tommyds REQUIRED CONFIG)
 message(STATUS "Found tommyds ${tommyds_VERSION}")
 
-find_package(xxhash REQUIRED)
+find_package(xxhash REQUIRED CONFIG)
 message(STATUS "Found xxHash ${xxhash_VERSION}")
 
 #-----------------------------------------------------------------------
